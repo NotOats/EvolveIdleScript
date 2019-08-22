@@ -1,33 +1,30 @@
-import connect from 'gulp-connect';
 import gulp from 'gulp';
-import path from 'path';
-import requireDir from 'require-dir';
+import { bundleConfig } from './src/config.js';
 
-import { config } from './src/config.js';
+// Load gulp plugins
+const plugins = require('gulp-load-plugins')({
+    overridePattern: false,
+    pattern: [ 'vinyl-*' ],
+    rename : {
+        'vinyl-buffer': 'buffer',
+        'vinyl-source-stream': 'source'
+    }
+});
 
-requireDir('./gulp_tasks', { recurse:true });
+// Load gulp tasks
+require('require-dir')('./gulp_tasks', { recurse: true })
 
 /*
- * Build everything
+ * Gulp Tasks
  */
 gulp.task('build', gulp.series('browserify'));
 
-/*
- * Setup gulp to watch for files changes
- */
-gulp.task('watch', gulp.series('build', () => {
-    let index = path.join(config.entryPointPath, '*.js');
-    
-    gulp.watch(index, gulp.series('build'));
-}));
+gulp.task('watch', gulp.series('build', 'browserify-watch'));
 
-/*
- * Run the test web server, this requires the build task to run first
- */
 gulp.task('server', (callback) => {
-    connect.server({
+    plugins.connect.server({
         name: 'Bundle Server',
-        root: config.bundlePath,
+        root: bundleConfig.bundlePath,
         host: '0.0.0.0',
         port: 42069,
     }, callback);

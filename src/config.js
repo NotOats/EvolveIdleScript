@@ -1,4 +1,4 @@
-export const userscriptHeader = {
+export const userscriptConfig = {
     name: 'EvolveIdleScript',
     match: 'https://pmotschmann.github.io/Evolve/',
     require: [
@@ -7,7 +7,7 @@ export const userscriptHeader = {
     ]
 };
 
-export const config = {
+export const bundleConfig = {
     bundleName: 'EvolveIdleScript.user.js',
     bundlePath: './dist/',
 

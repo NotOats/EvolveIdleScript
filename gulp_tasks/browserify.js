@@ -1,41 +1,50 @@
 import browserify from 'browserify';
-import buffer from 'vinyl-buffer';
-import environments from 'gulp-environments';
 import fs from 'fs';
 import gulp from 'gulp';
-import gutil from 'gulp-util';
 import path from 'path';
-import source from 'vinyl-source-stream';
-import uglify from 'gulp-uglify';
 import * as userscript from 'userscript-meta';
-const gulpheader = require('gulp-header');
+import { bundleConfig, userscriptConfig } from '../src/config.js';
 
-import { config, userscriptHeader } from '../src/config.js';
-
-// Environment
-var development = environments.development;
-var production = environments.production;
+// Load gulp plugins
+const plugins = require('gulp-load-plugins')({
+    overridePattern: false,
+    pattern: [ 'vinyl-*' ],
+    rename : {
+        'vinyl-buffer': 'buffer',
+        'vinyl-source-stream': 'source'
+    }
+});
 
 /*
- * Bundles scripts using browserify
+ * Tasks
  */
 gulp.task('browserify', () => {
+    let development = plugins.environments.development;
+    let production = plugins.environments.production;
+    let entryPoint = path.join(bundleConfig.entryPointPath, bundleConfig.entryPointName)
+    let headerString = createHeaderString(userscriptConfig);
+
     return browserify({
-        entries: path.join(config.entryPointPath, config.entryPointName),
+        entries: entryPoint,
         debug: development()
     })
     .bundle()
     .on('error', function (err) {
-        gutil.log(err.message);
+        plugins.util.log(err.message);
         this.emit('end');
     })
-    .pipe(source(config.bundleName))
-    .pipe(buffer())
-    .pipe(production(uglify()))
-    .pipe(createHeader(userscriptHeader))
-    .pipe(gulp.dest(config.bundlePath));
+    .pipe(plugins.source(bundleConfig.bundleName))
+    .pipe(plugins.buffer())
+    .pipe(production(plugins.uglify()))
+    .pipe(plugins.header(headerString))
+    .pipe(gulp.dest(bundleConfig.bundlePath));
 });
 
+gulp.task('browserify-watch', () => {
+    let index = path.join(bundleConfig.entryPointPath, '*.js');
+    
+    gulp.watch(index, gulp.series('build'));
+})
 
 /*
  * Userscript Header Generation
@@ -75,12 +84,11 @@ function trimFalsyLeaves (obj) {
     return obj;
 }
 
-function createHeader(overwriteObj) {
+function createHeaderString(overwriteObj) {
     let header = trimFalsyLeaves({
         ...generateDefaultHeader(),
         ...(typeof overwriteObj === 'object' ? overwriteObj : {})
     });
 
-    let headerString = userscript.stringify(header);
-    return gulpheader(headerString);
+    return userscript.stringify(header);
 }

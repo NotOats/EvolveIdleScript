@@ -6,6 +6,9 @@
   "author": "NotOats",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
     "babelify": "^10.0.0",
     "behaviortree": "^2.0.2",
     "brfs": "^2.0.2",
@@ -16,17 +19,13 @@
     "gulp-connect": "^5.7.0",
     "gulp-environments": "^0.1.2",
     "gulp-header": "^2.0.9",
+    "gulp-load-plugins": "^2.0.1",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.8",
     "require-dir": "^1.2.0",
     "userscript-meta": "^1.0.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5"
   },
   "browserify": {
     "transform": [
