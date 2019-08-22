@@ -1,0 +1,46 @@
+{
+  "name": "evolveidlescript",
+  "version": "1.0.0",
+  "description": "Evolve idle game bot",
+  "main": "src/index.js",
+  "author": "NotOats",
+  "license": "ISC",
+  "dependencies": {
+    "babelify": "^10.0.0",
+    "behaviortree": "^2.0.2",
+    "brfs": "^2.0.2",
+    "browserify": "^16.5.0",
+    "browserify-shim": "^3.8.14",
+    "default-compare": "^1.0.0",
+    "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0",
+    "gulp-environments": "^0.1.2",
+    "gulp-header": "^2.0.9",
+    "gulp-uglify": "^3.0.2",
+    "gulp-util": "^3.0.8",
+    "require-dir": "^1.2.0",
+    "userscript-meta": "^1.0.1",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5"
+  },
+  "browserify": {
+    "transform": [
+      "brfs",
+      "browserify-shim",
+      "babelify"
+    ]
+  },
+  "browserify-shim": {
+    "fs": "fs"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}
