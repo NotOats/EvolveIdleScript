@@ -91,4 +91,4 @@ typings/
 .chrome-env/
 
 # Browserify Dist
-.dist/
+dist/
