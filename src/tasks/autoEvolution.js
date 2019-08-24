@@ -3,7 +3,21 @@ import {BehaviorTree, Sequence, Selector, Task, SUCCESS, FAILURE} from 'behavior
 // Success if we're in the evolution stage, failure otherwise
 const evolutionStageCheck = new Task({
     run: function(blackboard) {
-        return $('#evolution:visible').length ? SUCCESS : FAILURE;
+        // We're in evo state, try to initialize if needed.
+        if($('#evolution:visible').length){
+            if(typeof(blackboard.evo === 'undefined')) {
+                blackboard.evo = {};
+            }
+
+            return SUCCESS;
+        }
+
+        // We're done, no longer in evo state. Cleanup time.
+        if(typeof(blackboard.evo !== 'undefined')) {
+            delete blackboard.evo;
+        }
+
+        return FAILURE;
     }
 });
 
@@ -27,7 +41,9 @@ const selectChallenge = new Task({
 
 const selectBuildAction = new Task({
     run: function(blackboard) {
+        const bb = blackboard.evo;
         const buildingOrder = new Map([
+            ['sexual_reproduction', 1],
             ['mitochondria', 3],
             ['eukaryotic_cell', 5],
             ['nucleus', 5],
@@ -48,7 +64,7 @@ const selectBuildAction = new Task({
             
             console.log(`[Debug] Selecting ${building} (${currentCount}/${maxCount})`);
 
-            blackboard.nextAction = building;
+            bb.nextAction = building;
 
             return SUCCESS;
         }
@@ -59,22 +75,18 @@ const selectBuildAction = new Task({
 
 const runBuildAction = new Task({
     run: function(blackboard) {
-        if(typeof(blackboard.nextAction) === 'undefined') {
+        const bb = blackboard.evo;
+
+        if(typeof(bb.nextAction) === 'undefined') {
             return FAILURE;
         }
 
-        console.log(`[Debug] Running ${blackboard.nextAction}`);
+        console.log(`[Debug] Running ${bb.nextAction}`);
 
-        $(`div[id*='${blackboard.nextAction}'].action > a.button`).get(0).click();
+        $(`div[id*='${bb.nextAction}'].action > a.button`).get(0).click();
 
         return SUCCESS;
     },
-    end: function(blackboard) {
-        // Clean up blackboard
-        if(typeof(blackboard.nextAction) !== 'undefined') {
-            delete blackboard.nextAction;
-        }
-    }
 });
 
 // Check if we're in evo stage.

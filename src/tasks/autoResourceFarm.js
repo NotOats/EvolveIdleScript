@@ -10,7 +10,7 @@ const selectResource = new Task({
             let action = $(`div[id*='${resourceName}'].action`);
             if(action.length) {
                 // Check if we're at the resource cap
-                let resource = blackboard.global.resource[this.innerText];
+                let resource = blackboard.game.global.resource[this.innerText];
 
                 if(resource.amount < resource.max) {
                     blackboard.resource = resourceName;

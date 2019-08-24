@@ -18,7 +18,7 @@ function userscriptEntryPoint() {
             ]
         }),
         blackboard: {
-            global: unsafeWindow.game.global,
+            game: unsafeWindow.game,
         }
     });
 
@@ -31,9 +31,11 @@ unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint)
 $(document).ready(function() {
     let injectScript = `
 import { global } from './vars.js';
+import { actions } from './actions.ja';
 
 window.game =  {
     global: global,
+    actions: actions
 };
 
 window.dispatchEvent(new CustomEvent('customModuleAdded'));
