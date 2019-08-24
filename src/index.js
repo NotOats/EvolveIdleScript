@@ -31,7 +31,7 @@ unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint)
 $(document).ready(function() {
     let injectScript = `
 import { global } from './vars.js';
-import { actions } from './actions.ja';
+import { actions } from './actions.js';
 
 window.game =  {
     global: global,
