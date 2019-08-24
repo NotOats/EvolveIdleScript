@@ -1,4 +1,5 @@
-import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } from 'behaviortree'
+import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } from 'behaviortree';
+
 
 const myTask = new Task({
     start: function(bb) { bb.isStarted = true; },
@@ -22,3 +23,28 @@ var bTree = new BehaviorTree({
 
 bTree.step()
 bTree.step()
+
+
+unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint)
+
+function userscriptEntryPoint() {
+    console.log(unsafeWindow.game);
+}
+
+
+$(document).ready(function() {
+    let injectScript = `
+import { global } from './vars.js';
+
+window.game =  {
+    global: global,
+};
+
+window.dispatchEvent(new CustomEvent('customModuleAdded'));
+`;
+
+    $('<script>')
+    .attr('type', 'module')
+    .text(injectScript)
+    .appendTo('head');
+});
