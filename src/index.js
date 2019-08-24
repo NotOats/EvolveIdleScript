@@ -1,36 +1,32 @@
-import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } from 'behaviortree';
+import {BehaviorTree, Selector} from 'behaviortree';
 
+// TODO: Add directory requiring that supports browserify, require-globify?
+import './tasks/autoEvolution.js';
+import './tasks/autoResourceFarm.js';
 
-const myTask = new Task({
-    start: function(bb) { bb.isStarted = true; },
-    end: function(bb) { bb.isStarted = false; },
-    run: function(bb) {
-        console.log("IT WORKED")
-        return SUCCESS
-    }
-})
-
-const mySequence = new Sequence({
-    nodes: [
-        myTask
-    ]
-})
-
-var bTree = new BehaviorTree({
-    tree: mySequence,
-    blackboard: {}
-})
-
-bTree.step()
-bTree.step()
-
-
-unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint)
-
+/*
+ * Script entry point, sets up unsafewindow.game.global
+ */
 function userscriptEntryPoint() {
     console.log(unsafeWindow.game);
+
+    let bTree = new BehaviorTree({
+        tree : new Selector({
+            nodes: [
+                'autoEvolution',
+                'autoResourceFarm'
+            ]
+        }),
+        blackboard: {
+            global: unsafeWindow.game.global,
+        }
+    });
+
+    // Tick at 60fps
+    setInterval(function() { bTree.step(); }, 1000/60);
 }
 
+unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint)
 
 $(document).ready(function() {
     let injectScript = `
