@@ -41,9 +41,9 @@ gulp.task('browserify', () => {
 });
 
 gulp.task('browserify-watch', () => {
-    let index = path.join(bundleConfig.entryPointPath, '*.js');
+    let index = path.join(bundleConfig.entryPointPath, '**/*.js');
     
-    gulp.watch(index, gulp.series('build'));
+    gulp.watch(index, gulp.series('browserify'));
 })
 
 /*
@@ -84,11 +84,20 @@ function trimFalsyLeaves (obj) {
     return obj;
 }
 
+let devBuildNumber = 0;
 function createHeaderString(overwriteObj) {
+    let defaultHeader = generateDefaultHeader();
+    
+    if(plugins.environments.development()) {
+        defaultHeader.version = `${defaultHeader.version}-build.[${devBuildNumber}]`;
+    }
+
     let header = trimFalsyLeaves({
-        ...generateDefaultHeader(),
-        ...(typeof overwriteObj === 'object' ? overwriteObj : {})
+        ...defaultHeader,
+        ...(typeof overwriteObj === 'object' ? overwriteObj : {}),
     });
+
+    devBuildNumber++;
 
     return userscript.stringify(header);
 }
