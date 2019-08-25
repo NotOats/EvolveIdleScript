@@ -31,12 +31,13 @@ const selectPlanet = new Task({
 const selectRace = new Task({
     run: function(blackboard) {
         const bb = blackboard.evo;
-        const target = races['human'];
+        const target = races['antid'];
 
         for(const building of target.evolveSequence) {
             const element = $(`div[id*='${building}'].action:not(.cna)`);
 
             if(element.length) {
+                console.log(`[Debug] Trying for race: ${target.name} (madlvl ${target.madLevel})`);
                 console.log(`[Debug] Selecting ${building}`);
 
                 bb.nextAction = building;

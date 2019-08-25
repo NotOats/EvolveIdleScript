@@ -1,25 +1,37 @@
 export class Race {
     constructor(id, evolveSequence) {
         this.id = id;
-        this.evolveSequence = evolveSequence;
+        // ensure evo-{id} is first for seeded/creator perk
+        this.evolveSequence = evolveSequence[0] == id ? evolveSequence : [id].concat(evolveSequence);
     }
 
     get name() {
-        if(typeof(unsafeWindow.game) === 'undefined' 
-        || typeof(unsafeWindow.game.races) === 'undefined') {
+        try {
+            return unsafeWindow.game.races[this.id].name;
+        }
+        catch(e) {
             return null;
         }
-
-        return unsafeWindow.game.races[this.id].name;
     }
 
     get type() {
-        if(typeof(unsafeWindow.game) === 'undefined' 
-        || typeof(unsafeWindow.game.races) === 'undefined') {
+        try {
+            return unsafeWindow.game.races[this.id].type;
+        }
+        catch(e) {
             return null;
         }
+    }
 
-        return unsafeWindow.game.races[this.id].type;
+    get madLevel() {
+        try {
+            let value = unsafeWindow.game.global.stats.achieve[`extinct_${this.id}`];
+
+            return typeof(value) !== 'undefined' ? value : 0;
+        }
+        catch(e) {
+            return 0;
+        }
     }
 }
 
