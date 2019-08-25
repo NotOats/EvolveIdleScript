@@ -2,18 +2,21 @@ import {BehaviorTree, Sequence, Task, SUCCESS, FAILURE} from 'behaviortree';
 
 const selectResource = new Task({
     run: function(blackboard) {
-        $('#resources > .resource > .res').each(function() {
-            // Pull the resource name
-            let resourceName = this.innerText.toLowerCase();
+        $('#resources > .resource').each(function() {
+            //ex: resFood => Food
+            let resourceName = this.id.slice(3);
+
+             // Food (in res array) => food (city-food action id)
+            let resourceActionName = resourceName.toLowerCase();
 
             // Check if it has an action associated with it
-            let action = $(`div[id*='${resourceName}'].action`);
+            let action = $(`div[id*='${resourceActionName}'].action:not(.cna) > a.button`);
             if(action.length) {
                 // Check if we're at the resource cap
-                let resource = blackboard.game.global.resource[this.innerText];
+                let resource = blackboard.game.global.resource[resourceName];
 
-                if(resource.amount < resource.max) {
-                    blackboard.resource = resourceName;
+                if(typeof(resource) !== 'undefined' && resource.amount < resource.max) {
+                    blackboard.resource = action;
                     return false;
                 }
             }
@@ -30,10 +33,10 @@ const gameFarmAction = new Task({
             return FAILURE;
         }
 
-        //console.log(`[Debug] Farming ${blackboard.resource}`);
+        console.log(`[Debug] Farming: ${blackboard.resource.text()}`);
         
-        const element = $(`div[id*='${blackboard.resource}'].action > a.button`).get(0);
-
+        //const element = $(`div[id*='${blackboard.resource}'].action > a.button`).get(0);
+        const element = blackboard.resource.get(0);
         for(let i = 0; i < 5; i++) {
             element.click();
         }
