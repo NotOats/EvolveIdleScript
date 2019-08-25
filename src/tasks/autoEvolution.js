@@ -33,8 +33,7 @@ const selectRace = new Task({
         const bb = blackboard.evo;
         const target = races['human'];
 
-        for(const index in target.evolveSequence) {
-            const building = target.evolveSequence[index];
+        for(const building of target.evolveSequence) {
             const element = $(`div[id*='${building}'].action:not(.cna)`);
 
             if(element.length) {

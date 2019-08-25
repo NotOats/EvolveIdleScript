@@ -3,6 +3,24 @@ export class Race {
         this.id = id;
         this.evolveSequence = evolveSequence;
     }
+
+    get name() {
+        if(typeof(unsafeWindow.game) === 'undefined' 
+        || typeof(unsafeWindow.game.races) === 'undefined') {
+            return null;
+        }
+
+        return unsafeWindow.game.races[this.id].name;
+    }
+
+    get type() {
+        if(typeof(unsafeWindow.game) === 'undefined' 
+        || typeof(unsafeWindow.game.races) === 'undefined') {
+            return null;
+        }
+
+        return unsafeWindow.game.races[this.id].type;
+    }
 }
 
 // Phagocytosis

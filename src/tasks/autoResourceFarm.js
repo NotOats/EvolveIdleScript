@@ -33,7 +33,7 @@ const gameFarmAction = new Task({
             return FAILURE;
         }
 
-        console.log(`[Debug] Farming: ${blackboard.resource.text()}`);
+        //console.log(`[Debug] Farming: ${blackboard.resource.text()}`);
         
         //const element = $(`div[id*='${blackboard.resource}'].action > a.button`).get(0);
         const element = blackboard.resource.get(0);
