@@ -1,4 +1,5 @@
 import {BehaviorTree, Sequence, Selector, Task, SUCCESS, FAILURE} from 'behaviortree';
+import {races} from '../data/races.js';
 
 // Success if we're in the evolution stage, failure otherwise
 const evolutionStageCheck = new Task({
@@ -29,6 +30,22 @@ const selectPlanet = new Task({
 
 const selectRace = new Task({
     run: function(blackboard) {
+        const bb = blackboard.evo;
+        const target = races['human'];
+
+        for(const index in target.evolveSequence) {
+            const building = target.evolveSequence[index];
+            const element = $(`div[id*='${building}'].action:not(.cna)`);
+
+            if(element.length) {
+                console.log(`[Debug] Selecting ${building}`);
+
+                bb.nextAction = building;
+
+                return SUCCESS;
+            }
+        }
+
         return FAILURE;
     }
 });
@@ -43,7 +60,6 @@ const selectBuildAction = new Task({
     run: function(blackboard) {
         const bb = blackboard.evo;
         const buildingOrder = new Map([
-            ['sexual_reproduction', 1],
             ['mitochondria', 3],
             ['eukaryotic_cell', 5],
             ['nucleus', 5],

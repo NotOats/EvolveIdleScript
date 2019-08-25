@@ -31,8 +31,12 @@ const gameFarmAction = new Task({
         }
 
         //console.log(`[Debug] Farming ${blackboard.resource}`);
+        
+        const element = $(`div[id*='${blackboard.resource}'].action > a.button`).get(0);
 
-        $(`div[id*='${blackboard.resource}'].action > a.button`).get(0).click();
+        for(let i = 0; i < 5; i++) {
+            element.click();
+        }
 
         return SUCCESS;
     },

@@ -26,16 +26,18 @@ function userscriptEntryPoint() {
     setInterval(function() { bTree.step(); }, 1000/60);
 }
 
-unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint)
+unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint);
 
 $(document).ready(function() {
     let injectScript = `
 import { global } from './vars.js';
 import { actions } from './actions.js';
+import { races } from './races.js';
 
 window.game =  {
     global: global,
-    actions: actions
+    actions: actions,
+    races: races
 };
 
 window.dispatchEvent(new CustomEvent('customModuleAdded'));
