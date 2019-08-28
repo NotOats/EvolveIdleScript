@@ -4,6 +4,9 @@ import {BehaviorTree, Selector} from 'behaviortree';
 import './tasks/autoEvolution.js';
 import './tasks/autoResourceFarm.js';
 
+import {DelayedAction, Type} from './scheduler/delayedAction.js';
+import {Timer} from './scheduler/timer.js';
+
 /*
  * Script entry point, sets up unsafewindow.game.global
  */
@@ -22,8 +25,17 @@ function userscriptEntryPoint() {
         }
     });
 
-    // Tick at 60fps
-    setInterval(function() { bTree.step(); }, 1000/60);
+    
+    let timer = new Timer();
+    let delayed = timer.setInterval(function() {
+        bTree.step();
+    }, 1000/60);
+    
+    /*
+    setInterval(function() { 
+        bTree.step(); 
+    }, 1000/60);
+    */
 }
 
 unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint);
