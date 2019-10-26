@@ -1,62 +1,33 @@
-import {BehaviorTree, Selector} from 'behaviortree';
-
-// TODO: Add directory requiring that supports browserify, require-globify?
-import './tasks/autoEvolution.js';
-import './tasks/autoResourceFarm.js';
-
-import {DelayedAction, Type} from './scheduler/delayedAction.js';
 import {Timer} from './scheduler/timer.js';
 
 /*
- * Script entry point, sets up unsafewindow.game.global
+ * Userscript entry point
+ * By this point window.game will be setup
  */
-function userscriptEntryPoint() {
-    console.log(unsafeWindow.game);
+window.addEventListener('startUserScript', userscriptEntryPoint);
 
-    let bTree = new BehaviorTree({
-        tree : new Selector({
-            nodes: [
-                'autoEvolution',
-                'autoResourceFarm'
-            ]
-        }),
-        blackboard: {
-            game: unsafeWindow.game,
-        }
-    });
+function userscriptEntryPoint() {
+    console.log(window.game);
 
     
     let timer = new Timer();
-    let delayed = timer.setInterval(function() {
-        bTree.step();
+    timer.setInterval(function() {
+        
     }, 1000/60);
-    
-    /*
-    setInterval(function() { 
-        bTree.step(); 
-    }, 1000/60);
-    */
+
+    let vars = require('./evolve/vars.js');
+    console.log(vars);
 }
 
-unsafeWindow.addEventListener('customModuleAdded', userscriptEntryPoint);
+// Wrap this in a string to avoid browserify messing with dynamic import
+new Function(`
+window.game = {};
 
-$(document).ready(function() {
-    let injectScript = `
-import { global } from './vars.js';
-import { actions } from './actions.js';
-import { races } from './races.js';
+let imports = ['vars', 'actions', 'races', 'resources'];
 
-window.game =  {
-    global: global,
-    actions: actions,
-    races: races
-};
-
-window.dispatchEvent(new CustomEvent('customModuleAdded'));
-`;
-
-    $('<script>')
-    .attr('type', 'module')
-    .text(injectScript)
-    .appendTo('head');
+let promises = imports.map(name => {
+    return import('./' + name + '.js').then(m => window.game[name] = m);
 });
+
+Promise.all(promises).then(_ => window.dispatchEvent(new CustomEvent('startUserScript')))
+`)();
