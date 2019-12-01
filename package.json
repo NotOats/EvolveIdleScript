@@ -6,7 +6,8 @@
   "author": "NotOats",
   "license": "ISC",
   "dependencies": {
-    "behaviortree": "^2.0.2"
+    "behaviortree": "^2.0.2",
+    "jquery": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",

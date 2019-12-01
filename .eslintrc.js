@@ -24,6 +24,7 @@ module.exports = {
     'rules': {
       'indent': ['error', 4],
       'require-jsdoc': 0,
+      'max-len': [1, 100, 4]
     },
   };
   

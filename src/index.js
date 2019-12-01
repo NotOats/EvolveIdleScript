@@ -9,14 +9,13 @@ window.addEventListener('startUserScript', userscriptEntryPoint);
 function userscriptEntryPoint() {
     console.log(window.game);
 
-    
-    let timer = new Timer();
+    const timer = new Timer();
     timer.setInterval(function() {
-        
+
     }, 1000/60);
 
-    //let vars = require('./evolve/vars.js');
-    //console.log(vars);
+    // let vars = require('./evolve/vars.js');
+    // console.log(vars);
 }
 
 // Wrap this in a string to avoid browserify messing with dynamic import

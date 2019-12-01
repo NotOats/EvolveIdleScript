@@ -1,21 +1,22 @@
+import $ from 'jquery';
 import {BehaviorTree, Sequence, Task, SUCCESS, FAILURE} from 'behaviortree';
 
 const selectResource = new Task({
     run: function(blackboard) {
-        $('#resources > .resource').each(function() {
-            //ex: resFood => Food
-            let resourceName = this.id.slice(3);
+        $('#resources > .resource').each(function(index, element) {
+            // ex: resFood => Food
+            const resourceName = element.id.slice(3);
 
-             // Food (in res array) => food (city-food action id)
-            let resourceActionName = resourceName.toLowerCase();
+            // Food (in res array) => food (city-food action id)
+            const resourceActionName = resourceName.toLowerCase();
 
             // Check if it has an action associated with it
-            let action = $(`div[id*='${resourceActionName}'].action:not(.cna) > a.button`);
-            if(action.length) {
+            const action = $(`div[id*='${resourceActionName}'].action:not(.cna) > a.button`);
+            if (action.length) {
                 // Check if we're at the resource cap
-                let resource = blackboard.game.global.resource[resourceName];
+                const resource = blackboard.game.global.resource[resourceName];
 
-                if(typeof(resource) !== 'undefined' && resource.amount < resource.max) {
+                if (typeof(resource) !== 'undefined' && resource.amount < resource.max) {
                     blackboard.resource = action;
                     return false;
                 }
@@ -23,21 +24,21 @@ const selectResource = new Task({
         });
 
         return typeof(blackboard.resource) !== 'undefined' ? SUCCESS : FAILURE;
-    }
+    },
 });
 
 // TODO: Genericise this into RunActionByName via blackboard.selectedAction?
 const gameFarmAction = new Task({
     run: function(blackboard) {
-        if(typeof(blackboard.resource) === 'undefined') {
+        if (typeof(blackboard.resource) === 'undefined') {
             return FAILURE;
         }
 
-        //console.log(`[Debug] Farming: ${blackboard.resource.text()}`);
-        
-        //const element = $(`div[id*='${blackboard.resource}'].action > a.button`).get(0);
+        // console.log(`[Debug] Farming: ${blackboard.resource.text()}`);
+
+        // const element = $(`div[id*='${blackboard.resource}'].action > a.button`).get(0);
         const element = blackboard.resource.get(0);
-        for(let i = 0; i < 5; i++) {
+        for (let i = 0; i < 5; i++) {
             element.click();
         }
 
@@ -45,17 +46,17 @@ const gameFarmAction = new Task({
     },
     end: function(blackboard) {
         // Clean up blackboard
-        if(typeof(blackboard.resource) !== 'undefined') {
+        if (typeof(blackboard.resource) !== 'undefined') {
             delete blackboard.resource;
         }
-    }
+    },
 });
 
 const autoResourceFarm = new Sequence({
     nodes: [
         selectResource,
-        gameFarmAction
-    ]
+        gameFarmAction,
+    ],
 });
 
 BehaviorTree.register('autoResourceFarm', autoResourceFarm);
