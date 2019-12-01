@@ -15,8 +15,8 @@ function userscriptEntryPoint() {
         
     }, 1000/60);
 
-    let vars = require('./evolve/vars.js');
-    console.log(vars);
+    //let vars = require('./evolve/vars.js');
+    //console.log(vars);
 }
 
 // Wrap this in a string to avoid browserify messing with dynamic import

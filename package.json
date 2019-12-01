@@ -6,44 +6,42 @@
   "author": "NotOats",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
+    "behaviortree": "^2.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-private-methods": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/register": "^7.7.4",
     "babelify": "^10.0.0",
-    "behaviortree": "^2.0.2",
     "brfs": "^2.0.2",
     "browserify": "^16.5.0",
-    "browserify-shim": "^3.8.14",
-    "default-compare": "^1.0.0",
+    "fancy-log": "^1.3.3",
     "gulp": "^4.0.2",
     "gulp-connect": "^5.7.0",
-    "gulp-environments": "^0.1.2",
+    "gulp-environments": "^0.1.3",
     "gulp-header": "^2.0.9",
-    "gulp-load-plugins": "^2.0.1",
+    "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
-    "gulp-util": "^3.0.8",
-    "require-dir": "^1.2.0",
     "userscript-meta": "^1.0.1",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1"
   },
   "browserify": {
     "transform": [
-      "brfs",
-      "browserify-shim",
-      "babelify"
+      "babelify",
+      "brfs"
     ]
-  },
-  "browserify-shim": {
-    "./evolve/vars.js": "global:game.vars"
   },
   "babel": {
     "presets": [
       "@babel/preset-env"
     ],
     "plugins": [
-      "@babel/plugin-proposal-class-properties"
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-proposal-private-methods"
     ]
   }
 }
