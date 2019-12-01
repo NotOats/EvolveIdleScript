@@ -1,32 +1,26 @@
 import {Timer} from './scheduler/timer.js';
 
-/*
- * Userscript entry point
- * By this point window.game will be setup
- */
-window.addEventListener('startUserScript', userscriptEntryPoint);
+window.addEventListener('load', start);
 
-function userscriptEntryPoint() {
-    console.log(window.game);
+function start() {
+    let start = null;
+    let counter = 0;
 
     const timer = new Timer();
-    timer.setInterval(function() {
+    const interval = timer.setInterval(() => {
+        if (start === null) {
+            start = performance.now();
+            return;
+        }
 
-    }, 1000/60);
+        const time = (performance.now() - start) / 1000;
+        const average = ++counter / time;
 
-    // let vars = require('./evolve/vars.js');
-    // console.log(vars);
+        console.log(`TICK: ${counter} calls @ ${average.toFixed(6)} calls/s`);
+
+        if (counter == 5) {
+            interval.clear();
+            console.log(window.evolve);
+        }
+    }, 1000);
 }
-
-// Wrap this in a string to avoid browserify messing with dynamic import
-new Function(`
-window.game = {};
-
-let imports = ['vars', 'actions', 'races', 'resources'];
-
-let promises = imports.map(name => {
-    return import('./' + name + '.js').then(m => window.game[name] = m);
-});
-
-Promise.all(promises).then(_ => window.dispatchEvent(new CustomEvent('startUserScript')))
-`)();

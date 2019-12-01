@@ -1,94 +1,94 @@
 import {DelayedAction, Type} from './delayedAction.js';
-
-// polyfill requestIdleCallback
-window.requestIdleCallback = window.requestIdleCallback || function(handler) {
-    let startTime = window.performance.now();
-
-    return setTimeout(function() {
-        handler({
-            didTimeout: false,
-            timeRemaining: function() {
-                return Math.max(0, 50.0 - (window.performance.now() - startTime))
-            }
-        });
-    }, 1);
-}
-
-// polyfill cancelIdleCallback
-window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
-    clearTimeout(id);
-}
+import * as proxyTimers from './proxyTimer.js';
 
 export class Timer {
+    #running = false;
+    #deltaTime = 0;
+    #currentTime = 0;
+    #elapsedTime = 0;
+
+    #delayed = [];
+    #idleCallbackTimeout = 0;
+    #intervalCallback = null;
+
+    get running() {
+        return this.#running;
+    }
+
     constructor() {
         this.start();
     }
 
-    start() {
-        this.deltaTime = 0;
-        this.currentTime = 0;
-        this.elapsedTime = 0;
-        this.running = true;
+    start(ticksPerSecond = 30) {
+        if (this.#running) {
+            return;
+        }
 
-        this._delayed = [];
+        // Reset data
+        this.#deltaTime = 0;
+        this.#currentTime = 0;
+        this.#elapsedTime = 0;
 
-        this._idleCallbackTimeout = 1000/30; // Target at minimum 30 fps, every ~33ms
+        this.clear();
 
-        this._interval = window.requestIdleCallback(this.tick.bind(this), {timeout: this._idleCallbackTimeout});
+        this.#intervalCallback = proxyTimers.setInterval(
+            this._tick.bind(this),
+            1000 / ticksPerSecond
+        );
     }
 
     stop() {
-        this.running = false;
-
-        if(this._interval) {
-            window.cancelIdleCallback(this._interval);
-        }
-    }
-
-    tick (deadline) {
-        let newTime = window.performance.now();
-
-        this.deltaTime = newTime - this.currentTime;
-        this.currentTime = newTime;
-        this.elapsedTime += this.deltaTime;
-
-        let index = this._delayed.length;
-
-        // TODO: Figure out minimum time required to do task
-        // TODO: Add in deadline.didTimeout support. Maybe only do x number of tasks in queue?
-        // TODO: Save index when we run out of time so it can be resumed from there
-        while(index-- && deadline.timeRemaining() > 0) {
-            const delayed = this._delayed[index];
-
-            if(delayed.active) {
-                delayed.tick(this.deltaTime);
-            } else {
-                this._delayed.splice(index, 1);
-                continue;
-            }
+        if (!this.#running) {
+            return;
         }
 
-        // Restart requestIdleCallback
-        this._interval = window.requestIdleCallback(this.tick.bind(this), {timeout: this._idleCallbackTimeout});
-    }
+        this.#running = false;
 
-    setInterval(handler, time) {
-        let delayed = new DelayedAction(handler, time, Type.INTERVAL);
-        this._delayed.push(delayed);
-        return delayed;
-    }
-
-    setTimeout(handler, time) {
-        let delayed = new DelayedAction(handler, time, Type.TIMEOUT);
-        this._delayed.push(delayed);
-        return delayed;
+        if (this.#intervalCallback) {
+            proxyTimers.clearInterval(this.#intervalCallback);
+        }
     }
 
     clear() {
-        this._delayed.forEach(function(element) {
+        this.#delayed.forEach((element) => {
             element.clear();
-        })
+        });
 
-        this._delayed = [];
+        this.#delayed = [];
+    }
+
+    setInterval(handler, time) {
+        const action = new DelayedAction(handler, time, Type.INTERVAL);
+        this.#delayed.push(action);
+        return action;
+    }
+
+    setTimeout(handler, time) {
+        const action = new DelayedAction(handler, time, Type.TIMEOUT);
+        this.#delayed.push(action);
+        return action;
+    }
+
+    // Private methods are currently broken with eslint-babel
+    _tick() {
+        // Update timers
+        const newTime = performance.now();
+        this.#deltaTime = newTime - this.#currentTime;
+        this.#currentTime = newTime;
+        this.#elapsedTime += this.#deltaTime;
+
+        // Process actions
+        let index = this.#delayed.length;
+
+        while (index--) {
+            const action = this.#delayed[index];
+
+            if (action.active) {
+                action.tick(this.#deltaTime);
+            } else {
+                this.#delayed.splice(index, 1);
+                continue;
+            }
+        }
     }
 }

@@ -34,6 +34,10 @@
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1"
   },
+  "scripts": {
+    "build": "gulp browserify --env development",
+    "run": "gulp default --env development"
+  },
   "browserify": {
     "transform": [
       "babelify",
