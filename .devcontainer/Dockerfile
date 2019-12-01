@@ -8,11 +8,11 @@ FROM node:lts
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# The node image comes with a base non-root 'node' user, so the alternate
-# user here is primarily for Linux scenarios where you need to match your local
-# user UID/GID. See https://aka.ms/vscode-remote/containers/non-root-user.
-ARG USERNAME=vscode
-ARG USER_UID=1001
+# The node image comes with a base non-root 'node' user which this Dockerfile
+# gives sudo access. However, for Linux, this user's GID/UID must match your local
+# user UID/GID to avoid permission issues with bind mounts. Update USER_UID / USER_GID 
+# if yours is not 1000. See https://aka.ms/vscode-remote/containers/non-root-user.
+ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 # Configure apt and install packages
@@ -20,7 +20,7 @@ RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \ 
     #
     # Verify git and needed tools are installed
-    && apt-get install -y git procps \
+    && apt-get -y install git iproute2 procps \
     #
     # Remove outdated yarn from /opt and install via package 
     # so it can be easily updated via apt-get upgrade yarn
@@ -31,19 +31,18 @@ RUN apt-get update \
     && curl -sS https://dl.yarnpkg.com/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/pubkey.gpg | apt-key add - 2>/dev/null \
     && echo "deb https://dl.yarnpkg.com/$(lsb_release -is | tr '[:upper:]' '[:lower:]')/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
-    && apt-get -y install --no-install-recommends yarn net-tools \
+    && apt-get -y install --no-install-recommends yarn \
     #
-    # Install tslint and typescript globally
-    && npm install -g tslint typescript eslint gulp \
+    # Install eslint globally
+    && npm install -g eslint gulp-cli \
     #
-    # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
-    && if [ "$USER_GID" != "1000" ]; then groupadd --gid $USER_GID $USERNAME; fi \
-    && if [ "$USER_UID" != "1000" ]; then useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME; fi \
-    # [Optional] Uncomment the next four lines to add sudo support
-    # && apt-get install -y sudo \
-    # && if [ "$USER_UID" != "1000" ]; then echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME; fi \
-    # && echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node \
-    # && chmod 0440 /etc/sudoers.d/$USERNAME \
+    # [Optional] Update a non-root user to match UID/GID - see https://aka.ms/vscode-remote/containers/non-root-user.
+    && if [ "$USER_GID" != "1000" ]; then groupmod node --gid $USER_GID; fi \
+    && if [ "$USER_UID" != "1000" ]; then usermod --uid $USER_UID node; fi \
+    # [Optional] Add add sudo support for non-root user
+    && apt-get install -y sudo \
+    && echo node ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/node \
+    && chmod 0440 /etc/sudoers.d/node \
     #
     # Clean up
     && apt-get autoremove -y \

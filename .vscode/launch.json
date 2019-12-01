@@ -10,7 +10,8 @@
             "name": "Launch Chrome against Evolve",
             "url": "https://pmotschmann.github.io/Evolve/",
             "userDataDir": "F:/Development/EvolveIdleScript/.chrome-env",
-            "preLaunchTask": "Run Gulp Default",
+            "webRoot": "${workspaceFolder}/",
+            //"preLaunchTask": "Run Gulp Default",
         }
     ]
 }
