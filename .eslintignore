@@ -1,0 +1,12 @@
+# Node Modules
+node_modules/
+
+# Distribution
+dist/
+
+# Visual Studio Code
+.devcontainer/
+.vscode/
+
+# Chrome User Folder
+.chrome-env/
