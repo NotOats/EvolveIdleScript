@@ -14,43 +14,25 @@
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/plugin-proposal-private-methods": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
-    "@babel/register": "^7.7.4",
     "babel-eslint": "^10.0.3",
-    "babelify": "^10.0.0",
-    "brfs": "^2.0.2",
-    "browserify": "^16.5.0",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.18.2",
-    "fancy-log": "^1.3.3",
-    "gulp": "^4.0.2",
-    "gulp-connect": "^5.7.0",
-    "gulp-environments": "^0.1.3",
-    "gulp-header": "^2.0.9",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-uglify": "^3.0.2",
-    "userscript-meta": "^1.0.1",
-    "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^2.0.0",
-    "watchify": "^3.11.1"
+    "npm-run-all": "^4.1.5",
+    "rollup": "^1.27.8",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.2",
+    "rollup-plugin-userscript-header": "^1.0.0",
+    "rollup-plugin-web-worker-loader": "^0.8.1",
+    "serve": "^11.2.0",
+    "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
-    "build": "gulp browserify --env development",
-    "run": "gulp default --env development"
-  },
-  "browserify": {
-    "transform": [
-      "babelify",
-      "brfs"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-proposal-private-methods"
-    ]
+    "build": "rollup -c",
+    "watch": "rollup -c -w",
+    "dev": "npm-run-all --parallel watch start",
+    "start": "serve -l 42069 dist"
   }
 }

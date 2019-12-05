@@ -1,4 +1,5 @@
-const fs = require('fs');
+// eslint-disable-next-line import/no-unresolved
+import ProxyTimerWorker from 'web-worker:./proxyTimerWorker.js';
 
 // Proxy info
 const handlers = {};
@@ -23,9 +24,7 @@ function generateId() {
 }
 
 // Start Web Worker
-const workerSource = fs.readFileSync(__dirname + '/proxyTimerWorker.js');
-const workerUrl = URL.createObjectURL(new Blob([workerSource]));
-const worker = new Worker(workerUrl);
+const worker = new ProxyTimerWorker();
 
 worker.addEventListener('message', (event) => {
     const id = event.data.id;
