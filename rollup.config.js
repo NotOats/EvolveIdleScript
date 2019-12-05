@@ -4,6 +4,8 @@ import babel from 'rollup-plugin-babel';
 import {terser} from 'rollup-plugin-terser';
 import userscriptHeader from 'rollup-plugin-userscript-header';
 import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+import filesize from 'rollup-plugin-filesize';
+
 
 import {bundleConfig, userscriptConfig} from './config.js';
 
@@ -29,8 +31,7 @@ export default {
         commonjs(),
         webWorkerLoader(),
         production && terser(),
-        userscriptHeader({
-            overwrite: userscriptConfig,
-        }),
+        userscriptHeader({overwrite: userscriptConfig}),
+        filesize({showGzippedSize: false}),
     ],
 };
