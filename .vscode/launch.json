@@ -11,7 +11,7 @@
             "url": "https://pmotschmann.github.io/Evolve/",
             "userDataDir": "F:/Development/EvolveIdleScript/.chrome-env",
             "webRoot": "${workspaceFolder}/",
-            //"preLaunchTask": "Run Gulp Default",
+            //"preLaunchTask": "Run npm dev",
         }
     ]
 }
