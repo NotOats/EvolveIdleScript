@@ -10,6 +10,7 @@ import vue from 'rollup-plugin-vue';
 
 import {bundleConfig, userscriptConfig} from './config.js';
 
+// Default to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const production = (process.env.NODE_ENV == 'production');
 
@@ -32,7 +33,9 @@ export default {
         resolve(),
         commonjs(),
         webWorkerLoader(),
-        vue(),
+        vue({
+            needMap: false,
+        }),
         replace({
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         }),

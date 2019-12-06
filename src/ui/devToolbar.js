@@ -3,13 +3,15 @@ import Vue from 'vue';
 import devToolbar from './components/devToolbar.vue';
 
 export function initialize() {
+    // Insert toolbar vue
     $('<div></div>')
         .attr('id', 'devToolbarVue')
         .insertAfter('#topBar');
 
-    const test = new Vue({
-        render: (h) => h(devToolbar),
-    });
+    // Fix .main top margin
+    $('.main').css('margin-top', 0);
 
-    test.$mount('#devToolbarVue');
+    new Vue({
+        render: (h) => h(devToolbar),
+    }).$mount('#devToolbarVue');
 }
