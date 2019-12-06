@@ -47,7 +47,7 @@ export class Resource {
 
     // Private methods are currently broken with eslint-babel
     get _data() {
-        return this.#element.__vue__._data;
+        return this.#element?.__vue__?._data;
     }
 
     get name() {
