@@ -5,15 +5,21 @@
   "main": "src/index.js",
   "author": "NotOats",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NotOats/EvolveIdleScript.git"
+  },
   "dependencies": {
     "behaviortree": "^2.0.2",
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "vue": "^2.6.10"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/plugin-proposal-private-methods": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
+    "@rollup/plugin-replace": "^2.2.1",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
@@ -26,12 +32,14 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^5.1.2",
     "rollup-plugin-userscript-header": "^1.0.0",
+    "rollup-plugin-vue": "^5.1.4",
     "rollup-plugin-web-worker-loader": "^0.8.1",
-    "serve": "^11.2.0"
+    "serve": "^11.2.0",
+    "vue-template-compiler": "^2.6.10"
   },
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -c -w",
+    "build": "NODE_ENV=production rollup -c",
+    "watch": "NODE_ENV=development rollup -c -w",
     "dev": "npm-run-all --parallel watch start",
     "start": "serve -l 42069 dist"
   }

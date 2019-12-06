@@ -1,6 +1,8 @@
 import {Timer} from './scheduler/timer.js';
+import {initUserInterface} from './ui';
 
-window.addEventListener('load', start);
+// window.addEventListener('load', start);
+start();
 
 function start() {
     let start = null;
@@ -22,5 +24,9 @@ function start() {
             interval.clear();
             console.log(window.evolve);
         }
+    }, 1000);
+
+    timer.setTimeout(() => {
+        initUserInterface();
     }, 1000);
 }
