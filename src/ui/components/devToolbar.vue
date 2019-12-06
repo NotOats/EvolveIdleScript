@@ -6,26 +6,20 @@
 
 <script>
 import $ from 'jquery';
+import {ResourceType, ParseResources} from '../../data/resources.js';
 
 export default {
     methods: {
         fillRes: function() {
-            // Pull resources list
-            $('div.resources > div[id*="res"]')
-                // Filter out special resources, Plasmid/Phage/etc name
-                .filter("div:not(:has(span.has-text-special))")
-                // Max each resource
-                .each((index, element) => {
-                    const data = element.__vue__._data;
-                    
-                    const restricted = ['Crate', 'Container'];
+            const restrictedTyped = [ResourceType.Storage, ResourceType.Prestigue];
 
-                    // Crafting max = -1, Gene max = -2
-                    // Ignore restricted resources
-                    if(data.max > 0 && !restricted.includes(data.name)) {
-                        data.amount = data.max;
-                    }
-                })
+            ParseResources().forEach((res) => {
+                if (!restrictedTyped.includes(res.type) && res.max != -1) {
+                    res._amount = res.max;
+                }
+
+                console.log(`${ResourceType.properties[res.type].name} - ${res.name} - ${res.amount}/${res.max}`);
+            });
         }
     }
 }

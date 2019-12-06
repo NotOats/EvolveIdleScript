@@ -10,7 +10,7 @@
             "name": "Launch Chrome against Evolve",
             "url": "https://pmotschmann.github.io/Evolve/",
             "userDataDir": "F:/Development/EvolveIdleScript/.chrome-env",
-            "webRoot": "${workspaceFolder}/",
+            "webRoot": "${workspaceFolder}/EvolveIdlescript/",
             //"preLaunchTask": "Run npm dev",
         }
     ]

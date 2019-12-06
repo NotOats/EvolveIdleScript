@@ -5,10 +5,12 @@ import {initUserInterface} from './ui';
 start();
 
 function start() {
+    const timer = new Timer();
+
+    /*
     let start = null;
     let counter = 0;
 
-    const timer = new Timer();
     const interval = timer.setInterval(() => {
         if (start === null) {
             start = performance.now();
@@ -25,6 +27,7 @@ function start() {
             console.log(window.evolve);
         }
     }, 1000);
+    */
 
     timer.setTimeout(() => {
         initUserInterface();
