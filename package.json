@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "behaviortree": "^2.0.2",
+    "buefy": "^0.8.8",
     "jquery": "^3.4.1",
+    "lz-string": "^1.4.4",
     "vue": "^2.6.10"
   },
   "devDependencies": {
@@ -43,6 +45,7 @@
     "build": "NODE_ENV=production rollup -c",
     "watch": "NODE_ENV=development rollup -c -w",
     "dev": "npm-run-all --parallel watch start",
-    "start": "serve -l 42069 dist"
+    "start": "serve -l 42069 dist",
+    "lint": "eslint . --fix"
   }
 }

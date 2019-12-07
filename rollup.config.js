@@ -1,3 +1,4 @@
+// Rollup plugins
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
@@ -8,19 +9,28 @@ import filesize from 'rollup-plugin-filesize';
 import replace from '@rollup/plugin-replace';
 import vue from 'rollup-plugin-vue';
 
+// Misc
 import {bundleConfig, userscriptConfig} from './config.js';
 
 // Default to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const production = (process.env.NODE_ENV == 'production');
 
-export default {
+const config = {
     input: bundleConfig.entryPoint,
     output: {
         file: bundleConfig.bundle,
         format: 'iife',
         sourcemap: true,
+        globals: {
+            'vue': 'Vue',
+            'buefy': 'Buefy',
+        },
     },
+    external: [
+        'vue',
+        'buefy',
+    ],
     plugins: [
         babel({
             exclude: 'node_modules/**',
@@ -46,3 +56,11 @@ export default {
         filesize({showGzippedSize: false}),
     ],
 };
+
+// Performance for development bundling
+if (!production) {
+    config.treeshake = false;
+    config.output.indent = false;
+}
+
+export default config;
