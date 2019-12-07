@@ -51,16 +51,18 @@ export class Resource {
     }
 
     get name() {
-        if ('name' in this._data) {
-            return this._data.name;
+        const value = this._data?.name;
+        if (value != undefined) {
+            return value;
         }
 
         return $(this.#element).attr('id').substring('res'.length);
     }
 
     get amount() {
-        if ('amount' in this._data) {
-            return this._data.amount;
+        const value = this._data?.amount;
+        if (value != undefined) {
+            return value;
         }
 
         // Format is 'amount/max' or 'amount' (for crafting)
@@ -75,22 +77,33 @@ export class Resource {
             return;
         }
 
-        if ('amount' in this._data) {
-            this._data.amount = count;
+        const data = this._data;
+        if ('amount' in data) {
+            data.amount = count;
         } else {
             throw Error('Failed to set resource amount, vue not found');
         }
     }
 
     get max() {
-        if ('max' in this._data) {
-            return this._data.max;
+        const value = this._data?.max;
+        if (value != undefined) {
+            return value;
         }
 
         // Format is 'amount/max' or 'amount' (for crafting)
         const counts = $(this.#element).children('span.count').text().split('/');
 
         return counts.length == 2 ? counts[1] : -1;
+    }
+
+    get display() {
+        const value = this._data?.display;
+        if (value != undefined) {
+            return value;
+        }
+
+        return $('#resMoney').css('display') != 'none';
     }
 
     get type() {

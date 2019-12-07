@@ -45,6 +45,15 @@ export default {
         // Fix .main top margin
         $('.main').css('margin-top', '0.5rem');
 
+        // Setup fillRes hotkey
+        console.log('[DevToolbar] Fill resources is now bound to "f".');
+        $(document).keypress((e) => {
+            // lowercase f
+            if (e.charCode == 102) {
+                this.methods.fillRes();
+            }
+        });
+
         return mountId;
     },
     data() {
@@ -57,7 +66,8 @@ export default {
             const restrictedTyped = [ResourceType.Storage, ResourceType.Prestigue];
 
             ParseResources().forEach((res) => {
-                if (!restrictedTyped.includes(res.type) && res.max > 0) {
+                if (!restrictedTyped.includes(res.type) &&
+                        res.max > 0 && res.display) {
                     res._amount = res.max;
                 }
             });
