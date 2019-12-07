@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import $ from 'jquery';
 import {ResourceType, ParseResources} from '../../data/resources.js';
 import {SaveManager} from '../../utils/saveManager.js';
 
