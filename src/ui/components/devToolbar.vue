@@ -2,14 +2,14 @@
     <div class="toolbar">
         <button class="button" @click="fillRes">Fill Resources</button>
 
-        <b-dropdown hoverable>
+        <b-dropdown>
             <button class="button" slot="trigger" @mousemove="loadSaves">
                 <span>Load Save</span>
                 <b-icon icon="menu-down" type="is-light"></b-icon>
             </button>
 
             <div v-for="save in saveGames" v-bind:key="save.id" class="save-dropdown">
-                <b-dropdown-item  v-if="save.data != undefined">
+                <b-dropdown-item v-if="save.data != undefined">
                     <div class="buttons has-addons special">
                         <b-button @click="saveOrLoad(save)" class="start">{{ save.name }}</b-button>
                         <b-button @click="deleteSave(save)" class="end" icon-right="close"></b-button>
@@ -21,7 +21,7 @@
             </div>
         </b-dropdown>
 
-        <button class="button right">HARD RESET</button>
+        <button class="button right danger" @click="hardReset">HARD RESET</button>
     </div>
 </template>
 
@@ -49,7 +49,7 @@ export default {
     },
     data() {
         return {
-            saveGames: saveManager.saves
+            saveGames: saveManager.saves,
         };
     },
     methods: {
@@ -82,6 +82,20 @@ export default {
                 saveManager.save();
             }
         },
+        hardReset: function() {
+            if (process.env.NODE_ENV != 'development') {
+                this.$buefy.dialog.confirm({
+                    title: 'Hard Reset',
+                    message: '<span style="color: darkred;">You are about to delete your Evolve save game.</span>',
+                    confirmText: 'Delete Save',
+                    type: 'is-danger',
+                    hasIcon: true,
+                    onConfirm: () => window.reset()
+                });
+            } else {
+                window.reset();
+            }
+        }
     }
 }
 </script>
@@ -96,6 +110,10 @@ div.toolbar button.button {
 }
 div.toolbar button.right {
     float: right;
+}
+
+div.toolbar button.danger:hover {
+    background-color: red;
 }
 
 .has-addons.special {
