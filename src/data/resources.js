@@ -41,6 +41,11 @@ export const ResourceType = Object.freeze({
 export class Resource {
     #element;
 
+    /**
+     * Creates a new Resource for the specified element
+     * The element should have a class of "resource"
+     * @param {HTMLElement} element - The resource's HTMLElement
+     */
     constructor(element) {
         this.#element = element;
     }
@@ -50,6 +55,10 @@ export class Resource {
         return this.#element?.__vue__?._data;
     }
 
+    /**
+     * Resource name
+     * @return {String}
+     */
     get name() {
         const value = this._data?.name;
         if (value != undefined) {
@@ -59,6 +68,10 @@ export class Resource {
         return $(this.#element).attr('id').substring('res'.length);
     }
 
+    /**
+     * Currently owned number of this resource
+     * @return {Number}
+     */
     get amount() {
         const value = this._data?.amount;
         if (value != undefined) {
@@ -85,6 +98,10 @@ export class Resource {
         }
     }
 
+    /**
+     * The maximum number of this resource
+     * @return {Number}
+     */
     get max() {
         const value = this._data?.max;
         if (value != undefined) {
@@ -97,6 +114,10 @@ export class Resource {
         return counts.length == 2 ? counts[1] : -1;
     }
 
+    /**
+     * If this resource is displayed
+     * @return {Boolean}
+     */
     get display() {
         const value = this._data?.display;
         if (value != undefined) {
@@ -106,6 +127,10 @@ export class Resource {
         return $('#resMoney').css('display') != 'none';
     }
 
+    /**
+     * The type of this resource
+     * @return {ResourceType}
+     */
     get type() {
         return mapClassToResource(this.#element);
     }
