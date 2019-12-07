@@ -1,9 +1,9 @@
 <template>
     <div class="toolbar">
-        <button class="button is-primary" @click="fillRes">Fill Resources</button>
+        <button class="button" @click="fillRes">Fill Resources</button>
 
         <b-dropdown hoverable>
-            <button class="button is-primary" slot="trigger" @mousemove="loadSaves">
+            <button class="button" slot="trigger" @mousemove="loadSaves">
                 <span>Load Save</span>
                 <b-icon icon="menu-down" type="is-light"></b-icon>
             </button>
@@ -20,16 +20,33 @@
                 </b-dropdown-item>
             </div>
         </b-dropdown>
+
+        <button class="button right">HARD RESET</button>
     </div>
 </template>
 
 <script>
+import $ from 'jquery';
 import {ResourceType, ParseResources} from '../../data/resources.js';
 import {SaveManager} from '../../utils/saveManager.js';
 
 const saveManager = new SaveManager();
 
 export default {
+    // Custom initialization function, returns mount id
+    initialize() {
+        const mountId = 'devToolbarVue';
+        
+        // Insert toolbar vue
+        $('<div></div>')
+            .attr('id', mountId)
+            .insertAfter('#topBar');
+
+        // Fix .main top margin
+        $('.main').css('margin-top', '0.5rem');
+
+        return mountId;
+    },
     data() {
         return {
             saveGames: saveManager.saves
@@ -76,6 +93,9 @@ div.toolbar {
 }
 div.toolbar button.button {
     border-color: purple;
+}
+div.toolbar button.right {
+    float: right;
 }
 
 .has-addons.special {
