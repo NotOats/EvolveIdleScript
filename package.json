@@ -12,7 +12,7 @@
   "dependencies": {
     "behaviortree": "^2.0.2",
     "buefy": "^0.8.8",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "lz-string": "^1.4.4",
     "vue": "^2.6.10"
   },
